@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export CLASSPATH=./src/:./libs/*:./out/production/DigitalPortraits/
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/dimitris/workspace/java/random/OpenCV/linux64:/home/dimitris/workspace/java/random/OpenCV/libs/cascade-files
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/dimitris/workspace/java/random/DigitalPortraits/linux64:/home/dimitris/workspace/java/random/DigitalPortraits/libs/cascade-files
 
 #if [ "$(ls -A out/production/Di)" ];then 
 #rm bin/*; 
