@@ -24,7 +24,7 @@ public class CVMain extends PApplet {
     PImage out;
 
     //Main Pimage that gets passed tou Portraits instances
-    PImage snapshot;
+    OpenCV snapshot;
 
     //Take Snapshot Button and clean(will be replaced)
     ControlP5 snapShotButton, clearButton;
@@ -47,7 +47,7 @@ public class CVMain extends PApplet {
         video.start();
 
         //tell opencv to get Colored snapshot
-        // opencv.useColor();
+         opencv.useColor();
 
 
         //Snapshot Button
@@ -81,10 +81,15 @@ public class CVMain extends PApplet {
             return;
         }
 
-        snapshot = opencv.getSnapshot();
-        face = snapshot.get(faces[0].x, faces[0].y - 50, faces[0].width, faces[0].height + 70);
+        snapshot = new OpenCV(this,opencv.getSnapshot());
+        snapshot.useColor();
+        face = snapshot.getOutput().get(faces[0].x, faces[0].y - 50, faces[0].width, faces[0].height + 70);
         System.out.println("CLICK");
-        System.out.println(face.width+" "+face.height);
+        System.out.println(face.width+" "+face.height+" ratio:"+ (float)face.width/face.height);
+
+        //tells whether pic is Grey==0 or Colored==1
+        boolean isColored = snapshot.getColorSpace()==0?false:true;
+        System.out.println(!isColored?"Grey Pic":"Colored Pic");
 
 
     }
