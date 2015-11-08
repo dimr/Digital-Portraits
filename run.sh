@@ -8,4 +8,4 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/dimitris/workspace/java/random/Dig
 #echo "Deleting .class files"
 #fi
 
-javac -d out/production/DigitalPortraits/ src/CVMain.java ; optirun java CVMain
+javac -d out/production/DigitalPortraits/ src/CVMain.java ; optirun java -ea CVMain
