@@ -39,7 +39,7 @@ public class CVMain extends PApplet {
     //message
     PGraphics faceMessage;
 
-    Portrait rectPortrait;
+    Portrait rectPortrait, vertexPortrait;
     Portrait textPortait;
     PGraphics result;
 
@@ -106,14 +106,18 @@ public class CVMain extends PApplet {
         boolean isColored = snapshot.getColorSpace() == 0 ? false : true;
         System.out.println(!isColored ? "Grey Pic" : "Colored Pic");
 
-/*        rectPortrait = new RectPortrait(this, face, true);
-        result = rectPortrait.generatePortrtait();
-        System.out.println(rectPortrait.toString());*/
+        rectPortrait = new RectPortrait(this, face, true);
+        PGraphics sult = rectPortrait.generatePortrtait();
+        System.out.println(rectPortrait.toString());
 
 
         textPortait = new TextPortrait(this, face, true);
         System.out.println(textPortait.toString());
         result = textPortait.generatePortrtait();
+
+        vertexPortrait = new VertexPortrait(this, face, true);
+
+        result = vertexPortrait.generatePortrtait();
 
     }
 

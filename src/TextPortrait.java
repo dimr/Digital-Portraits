@@ -35,7 +35,7 @@ public class TextPortrait extends Portrait {
             greyscale = pa.round((float) (pa.red(c) * 0.222 + pa.green(c) * 0.707 + pa.blue(c) * 0.071));
             result.pushMatrix();
             result.translate(x, y);
-            float fontSize = pa.map(greyscale, 0, 255, 8, 20);
+            float fontSize = pa.map(greyscale, 0, 255, 20,8);
             fontSize = pa.max(fontSize, 1);
             char letter = inputText.charAt(counter);
             result.fill(c);
