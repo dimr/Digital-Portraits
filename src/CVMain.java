@@ -39,7 +39,8 @@ public class CVMain extends PApplet {
     //message
     PGraphics faceMessage;
 
-    Portrait rects;
+    Portrait rectPortrait;
+    Portrait textPortait;
     PGraphics result;
 
     public void setup() {
@@ -79,7 +80,7 @@ public class CVMain extends PApplet {
         popMatrix();
         seesFace = faces.length == 0 ? false : true;
         showMessage();
-        if (rects != null) {
+        if (snapshot != null) {
             image(face, 0, 0);
         }
         if (result != null) {
@@ -105,9 +106,15 @@ public class CVMain extends PApplet {
         boolean isColored = snapshot.getColorSpace() == 0 ? false : true;
         System.out.println(!isColored ? "Grey Pic" : "Colored Pic");
 
-        rects = new RectPortrait(this, face, true);
-        result = rects.generatePortrtait();
-        System.out.println(rects.toString());
+/*        rectPortrait = new RectPortrait(this, face, true);
+        result = rectPortrait.generatePortrtait();
+        System.out.println(rectPortrait.toString());*/
+
+
+        textPortait = new TextPortrait(this, face, true);
+        System.out.println(textPortait.toString());
+        result = textPortait.generatePortrtait();
+
     }
 
     public void clearButton() {
@@ -115,7 +122,7 @@ public class CVMain extends PApplet {
             System.out.println("NOTHING TO CLEAR");
             return;
         }
-        rects = null;
+        rectPortrait = null;
         result = null;
 
     }
