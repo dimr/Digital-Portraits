@@ -52,8 +52,11 @@ public class VertexPortrait extends Portrait {
             test.add(temp);
         }
 
-        System.out.println("-----"+face.width+" "+face.height+" "+test.get(0).size());
+        System.out.println("-----" + face.width + " " + face.height + " " + test.get(0).size());
 
+        result.pushMatrix();
+        result.translate(0,0,-500);
+        result.rotateX(pa.radians(40));
         for (int y = 0; y < face.height; y++) {
 
             result.beginShape();
@@ -63,14 +66,19 @@ public class VertexPortrait extends Portrait {
                 int c=colors[y][x];
                 float greyscale = ((float) (pa.red(c) + pa.green(c)  + pa.blue(c)));
                 result.stroke(c);
-
-                result.vertex(test.get(y).get(x).x(),test.get(y).get(x).y());
+               // result.strokeWeight(2);
+                Vec2D p = new Vec2D(test.get(y).get(x).x(),test.get(y).get(x).y());
+               // float yy=p.jitter((float).4).y();
+                result.vertex(p.x(), p.y(),pa.map(greyscale,0,255,5,30));
             }
           ;
-            result.vertex(test.get(y).get(face.width-1).x(), test.get(y).get(face.width-1).y());
+            result.vertex(test.get(y).get(face.width - 1).x(), test.get(y).get(face.width - 1).y());
 
             result.endShape();
         }
+        result.popMatrix();
+
+
         result.endDraw();
 
 
