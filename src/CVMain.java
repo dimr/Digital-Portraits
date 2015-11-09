@@ -6,6 +6,7 @@ import processing.core.PImage;
 import processing.video.Capture;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * Created by dimitris on 11/7/15.
@@ -43,8 +44,13 @@ public class CVMain extends PApplet {
     Portrait textPortait;
     PGraphics result;
 
+    //render all portraits
+    ArrayList<PGraphics> allPortraits;
+    int offset = 10;
+    int accumulator = 0;
+
     public void setup() {
-        size(1366, 768, P3D);
+        size(1920, 1080, P3D);
         video = new Capture(this, 640 / 2, 480 / 2, 15);
         opencv = new OpenCV(this, 640 / 2, 480 / 2);
         opencv.loadCascade(OpenCV.CASCADE_FRONTALFACE);
@@ -72,20 +78,40 @@ public class CVMain extends PApplet {
         opencv.loadImage(video);
         faces = opencv.detect();
         //cale(2);
+
+        seesFace = faces.length == 0 ? false : true;
+        showMessage();
+
+
+//        for (int i = 1; i < allPortraits.size(); i++) {
+//            int offstet=10;
+//            image(allPortraits.get(i),offstet*i+allPortraits.get(i-1).width+,10);
+//        }
+
+        if (allPortraits != null) {
+//            image(allPortraits.get(0), 10, 10);
+//            image(allPortraits.get(1), allPortraits.get(0).width + 20, 10);
+            for (int i = 1; i < allPortraits.size() + 1; i++) {
+                accumulator = offset * i + allPortraits.get(i - 1).width * (i - 1);
+                image(allPortraits.get(i - 1), accumulator, 10);
+            }
+        }
+        if (snapshot != null) {
+            image(face, width - face.width, 0);
+        }
+//        if (result != null) {
+//            image(result, face.width, 0);
+//        }
+
+        //this is the camera
+
         pushMatrix();
         //scale((float).5);
         translate(width - video.width, height - video.height);
-        //scale((float).5);
-        image(video, 0, 0);
+        if (allPortraits==null)
+            //scale((float).5);
+            image(video, 0, 0);
         popMatrix();
-        seesFace = faces.length == 0 ? false : true;
-        showMessage();
-        if (snapshot != null) {
-            image(face, 0, 0);
-        }
-        if (result != null) {
-            image(result, face.width, 0);
-        }
     }
 
 
@@ -105,20 +131,25 @@ public class CVMain extends PApplet {
         //tells whether pic is Grey==0 or Colored==1
         boolean isColored = snapshot.getColorSpace() == 0 ? false : true;
         System.out.println(!isColored ? "Grey Pic" : "Colored Pic");
+        allPortraits = new ArrayList<PGraphics>();
+        allPortraits.add(new RectPortrait(this, face, true).generatePortrtait());
+        allPortraits.add(new TextPortrait(this, face, true).generatePortrtait());
+        allPortraits.add(new VertexPortrait(this, face, true).generatePortrtait());
 
-        rectPortrait = new RectPortrait(this, face, true);
-        PGraphics sult = rectPortrait.generatePortrtait();
-        System.out.println(rectPortrait.toString());
 
-
-        textPortait = new TextPortrait(this, face, true);
-        System.out.println(textPortait.toString());
-        result = textPortait.generatePortrtait();
-
-        vertexPortrait = new VertexPortrait(this, face, true);
-
-        result = vertexPortrait.generatePortrtait();
-
+        //        rectPortrait = new RectPortrait(this, face, true);
+//        PGraphics sult = rectPortrait.generatePortrtait();
+//        System.out.println(rectPortrait.toString());
+//
+//
+//        textPortait = new TextPortrait(this, face, true);
+//        System.out.println(textPortait.toString());
+//        result = textPortait.generatePortrtait();
+//
+//        vertexPortrait = new VertexPortrait(this, face, true);
+//
+//        result = vertexPortrait.generatePortrtait();
+        System.out.println("GENERATED");
     }
 
     public void clearButton() {
@@ -128,6 +159,7 @@ public class CVMain extends PApplet {
         }
         rectPortrait = null;
         result = null;
+        allPortraits=null;
 
     }
 
