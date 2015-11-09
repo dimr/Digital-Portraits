@@ -11,7 +11,6 @@ import java.util.ArrayList;
 public class VertexPortrait extends Portrait {
 
 
-    private ArrayList<ArrayList<Vec2D>> dfs;
     public VertexPortrait(PApplet pa, PImage img, boolean useColor) {
         super(pa, img, useColor);
 
@@ -24,7 +23,7 @@ public class VertexPortrait extends Portrait {
         PImage face = this.getPImage();
         PApplet pa = this.pa();
         face.loadPixels();
-        PGraphics result = pa.createGraphics(this.getPImage().width * 5, 5 * this.getPImage().height);
+        PGraphics result = pa.createGraphics(this.getPImage().width * 5, 5 * this.getPImage().height,pa.P3D);
         System.out.println(result.width + " " + result.height);
 
         result.beginDraw();
@@ -59,39 +58,21 @@ public class VertexPortrait extends Portrait {
 
             result.beginShape();
             result.vertex(test.get(y).get(0).x(), test.get(y).get(0).y());
-//            result.pushStyle();
-//            result.fill(255, 0, 0);
-//            result.ellipse(test.get(y).get(0).x(), test.get(y).get(0).y(), 10, 10);
-//            result.popStyle();
+
             for (int x = 0; x < face.width; x++) {
                 int c=colors[y][x];
                 float greyscale = ((float) (pa.red(c) + pa.green(c)  + pa.blue(c)));
-                //System.out.println(greyscale);
-                result.stroke(pa.map(greyscale, 100, 690, 0, 255));
+                result.stroke(c);
 
                 result.vertex(test.get(y).get(x).x(),test.get(y).get(x).y());
-//                result.pushStyle();
-//                result.fill(0,0,255);
-//                result.ellipse(test.get(y).get(x).x(),test.get(y).get(x).y(),3,3);;
-//                result.popStyle();
             }
-           // result.curveVertex(test.get(y).get(test.get(y).size()-1).x(),test.get(y).get(test.get(y).size()-1).x());
+          ;
             result.vertex(test.get(y).get(face.width-1).x(), test.get(y).get(face.width-1).y());
-//            result.pushStyle();
-//            result.fill(0, 255, 0);
-//            result.ellipse(test.get(y).get(face.width-1).x(), test.get(y).get(face.width-1).y(), 10, 10);
-//            result.popStyle();
-//            System.out.println(test.get(y));
+
             result.endShape();
         }
         result.endDraw();
-//        int x=0;
-//        for (int y = 0; y < face.height; y++) {
-//            int [] t= new int[this.getDimensions()/this.getHeight()];
-//
-//            result.beginShape();
-//
-//        }
+
 
 
 //        result.noFill();
