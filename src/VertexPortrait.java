@@ -10,38 +10,26 @@ import java.util.ArrayList;
  */
 public class VertexPortrait extends Portrait {
 
+    private PImage face;
+    //private PApplet pa;
+    private PGraphics result;
+    private float tileWidth,tileHeight;
+    private int colors[][];
+    private final ArrayList<ArrayList<Vec2D>> test;
 
     public VertexPortrait(PApplet pa, PImage img, boolean useColor) {
         super(pa, img, useColor);
+        this.face=this.getPImage();
 
-
-    }
-
-    @Override
-    public PGraphics generatePortrtait() {
-        assert (this.getPImage() != null) : "OK PIMAGE";
-        PImage face = this.getPImage();
-        PApplet pa = this.pa();
-        face.loadPixels();
-        PGraphics result = pa.createGraphics(this.getPImage().width * 5, 5 * this.getPImage().height,pa.P3D);
-        System.out.println(result.width + " " + result.height);
-
-        result.beginDraw();
-        result.background(255);
-
-        float tileWidth = result.width / (float) face.width;
-        float tileHeight = result.height / (float) face.height;
-//        int [] color = new int [this.getDimensions()];
-//
-//        for (int p = 0; p < color.length; p++) {
-//            color[p]=face.pixels[p];
-//        }
-
-        int[][] colors = new int[face.height][face.width];
-        ArrayList<ArrayList<Vec2D>> test = new ArrayList<ArrayList<Vec2D>>();
+        this.result = this.pa().createGraphics(this.getPImage().width*5,5*this.getPImage().height,this.pa().P3D);
+        this.tileWidth = result.width / (float) this.face.width;
+        this.tileHeight = result.height / (float) this.face.height;
+        this.face.loadPixels();
+        this.colors = new int[face.height][face.width];
+        test = new ArrayList<ArrayList<Vec2D>>();
         for (int y = 0; y < face.height; y++) {
             ArrayList<Vec2D> temp= new ArrayList<Vec2D>();
-           // test.add(temp);
+            // test.add(temp);
             for (int x = 0; x < face.width; x++) {
                 colors[y][x] = face.pixels[y * face.width + x];
                 float posX=tileWidth*x;
@@ -52,11 +40,30 @@ public class VertexPortrait extends Portrait {
             test.add(temp);
         }
 
-        System.out.println("-----" + face.width + " " + face.height + " " + test.get(0).size());
+    }
+
+    @Override
+    public PGraphics generatePortrtait() {
+        assert (this.getPImage() != null) : "OK PIMAGE";
+
+        System.out.println(result.width + " " + result.height);
+
+        result.beginDraw();
+        result.background(255);
+
+
+//        int [] color = new int [this.getDimensions()];
+//
+//        for (int p = 0; p < color.length; p++) {
+//            color[p]=face.pixels[p];
+//        }
+
+
+
 
         result.pushMatrix();
-        result.translate(0,0,-500);
-        result.rotateX(pa.radians(40));
+        result.translate(0, 0, -500);
+        result.rotateX(this.pa().radians(40));
         for (int y = 0; y < face.height; y++) {
 
             result.beginShape();
@@ -64,12 +71,12 @@ public class VertexPortrait extends Portrait {
 
             for (int x = 0; x < face.width; x++) {
                 int c=colors[y][x];
-                float greyscale = ((float) (pa.red(c) + pa.green(c)  + pa.blue(c)));
+                float greyscale = ((float) (this.pa().red(c) + this.pa().green(c)  + this.pa().blue(c)));
                 result.stroke(c);
                // result.strokeWeight(2);
                 Vec2D p = new Vec2D(test.get(y).get(x).x(),test.get(y).get(x).y());
                // float yy=p.jitter((float).4).y();
-                result.vertex(p.x(), p.y(),pa.map(greyscale,0,255,5,30));
+                result.vertex(p.x(), p.y(),this.pa().map(greyscale,0,255,5,30));
             }
           ;
             result.vertex(test.get(y).get(face.width - 1).x(), test.get(y).get(face.width - 1).y());
@@ -81,38 +88,6 @@ public class VertexPortrait extends Portrait {
 
         result.endDraw();
 
-
-
-//        result.noFill();
-//        result.beginShape();
-//        for (int y = 0; y < face.height; y++) {
-//            int tempX = 0;
-//            float tempPosX = tileWidth * tempX;
-//            float posY = tileHeight * y;
-//            result.curveVertex(tempPosX, posY);
-//            while (tempX < face.width) {
-//                int c = face.pixels[y * face.width + tempX];
-//                int greyscale = pa.round((float) (pa.red(c) * 0.222 + pa.green(c) * 0.707 + pa.blue(c) * 0.071));
-//                float posX = tileWidth * tempX++;
-//                //result.fill(greyscale);
-//                result.pushStyle();
-//                result.stroke(greyscale);
-//                pos.set(posX, posY);
-////                result.ellipse(pos.x(), pos.y(), 3, 3);
-//                result.curveVertex(pos.x(), pos.y());
-//                result.popStyle();
-////                result.pushStyle();
-////                result.noStroke();
-////                result.fill(c);
-////                result.ellipse(pos.x(),pos.y(),4,4);
-////                result.popStyle();
-//            }
-//            result.curveVertex(tempPosX, posY);
-//
-//        }
-//        result.endShape();
-//
-//        result.endDraw();
 
         return result;
     }

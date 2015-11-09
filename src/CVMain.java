@@ -50,7 +50,10 @@ public class CVMain extends PApplet {
     int accumulator = 0;
 
     public void setup() {
-        size(1920, 1080, P3D);
+        //small screen
+        size(1366, 768,P3D);
+        //big screen
+        //size(1920, 1080 - 20, P3D);
         video = new Capture(this, 640 / 2, 480 / 2, 15);
         opencv = new OpenCV(this, 640 / 2, 480 / 2);
         opencv.loadCascade(OpenCV.CASCADE_FRONTALFACE);
@@ -132,9 +135,9 @@ public class CVMain extends PApplet {
         boolean isColored = snapshot.getColorSpace() == 0 ? false : true;
         System.out.println(!isColored ? "Grey Pic" : "Colored Pic");
         allPortraits = new ArrayList<PGraphics>();
-        allPortraits.add(new RectPortrait(this, face, true).generatePortrtait());
         allPortraits.add(new TextPortrait(this, face, true).generatePortrtait());
         allPortraits.add(new VertexPortrait(this, face, true).generatePortrtait());
+        allPortraits.add(new RectPortrait(this, face, true).generatePortrtait());
 
 
         //        rectPortrait = new RectPortrait(this, face, true);
