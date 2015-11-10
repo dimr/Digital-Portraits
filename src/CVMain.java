@@ -48,10 +48,10 @@ public class CVMain extends PApplet {
     ArrayList<Portrait> allPortraits;
     int offset = 10;
     int accumulator = 0;
-
+    float portraitWidth;
 
     //will be removed
-    boolean bigScreen = true;
+    boolean bigScreen =1==1;
     float animationFactor = 0;
 
     public void setup() {
@@ -81,6 +81,7 @@ public class CVMain extends PApplet {
         //no Face Messsage
         faceMessage = createGraphics(200, 200);
 
+        portraitWidth=(width-(3*offset))/3;
 
     }
 
@@ -104,21 +105,25 @@ public class CVMain extends PApplet {
             //animationFactor = (int)map(sin((frameCount*2)),-1,1,0,360);
 //            image(allPortraits.get(0), 10, 10);
 //            image(allPortraits.get(1), allPortraits.get(0).width + 20, 10);
-            assert(allPortraits.size()!=0):"ZERO LENGTH";
-           assert(allPortraits.get(0).getResult()!=null):"EEEERRROORRR";
+            assert (allPortraits.size() != 0) : "ZERO LENGTH";
+            assert (allPortraits.get(0).getResult() != null) : "EEEERRROORRR";
 
-            for (int i = 1; i < allPortraits.size() + 1; i++) {
-                accumulator = offset * i + allPortraits.get(i - 1).getResult().width * (i - 1);
-                if (allPortraits.get(i-1) instanceof VertexPortrait) {
-                    int t=i-1;
-                    image(((VertexPortrait) allPortraits.get(t)).generatePortrtait(animationFactor), accumulator, 10);
-                } else {
-                    image(allPortraits.get(i - 1).generatePortrtait(), accumulator, 10);
-                    //    accumulator = offset * i + allPortraits.get(i - 1).getWidth() * (i - 1);
-                }
-            }
-        } else {
-            animationFactor = 0;
+//            for (int i = 1; i < allPortraits.size() + 1; i++) {
+//                accumulator = offset * i + allPortraits.get(i - 1).getResult().width * (i - 1);
+//                if (allPortraits.get(i-1) instanceof VertexPortrait) {
+//                    int t=i-1;
+//                    image(((VertexPortrait) allPortraits.get(t)).generatePortrtait(animationFactor), accumulator, 10);
+//                } else {
+//                    image(allPortraits.get(i - 1).generatePortrtait(), accumulator, 10);
+//                    //    accumulator = offset * i + allPortraits.get(i - 1).getWidth() * (i - 1);
+//                }
+//            }
+//        } else {
+//            animationFactor = 0;
+
+            image(allPortraits.get(0).generatePortrtait(), offset, 10, portraitWidth, height);
+            image(((VertexPortrait) allPortraits.get(1)).generatePortrtait(animationFactor), portraitWidth+2*offset, 10, portraitWidth, height);
+            image(allPortraits.get(2).generatePortrtait(),portraitWidth*2+3*offset,10,portraitWidth-10,height);
         }
         if (snapshot != null) {
             image(face, width - face.width, 0);
@@ -156,7 +161,6 @@ public class CVMain extends PApplet {
         boolean isColored = snapshot.getColorSpace() == 0 ? false : true;
         System.out.println(!isColored ? "Grey Pic" : "Colored Pic");
         allPortraits = new ArrayList<Portrait>();
-        assert (new RectPortrait(this, face, true)!=null):"NULL HERE ALSO";
         allPortraits.add(new RectPortrait(this, face, true));
         allPortraits.add(new VertexPortrait(this, face, true));
         allPortraits.add(new TextPortrait(this, face, true));
