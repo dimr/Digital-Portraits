@@ -31,6 +31,7 @@ public class RectPortrait extends Portrait {
         face.loadPixels();
         Vec2D pos = new Vec2D();
         PGraphics result = pa.createGraphics(this.getPImage().width*5,5*this.getPImage().height);
+        PImage image = pa.createImage(this.getPImage().width*5,5*this.getPImage().height,pa.RGB);
         System.out.println(result.width+"---"+result.height);
         result.beginDraw();
         result.background(100);

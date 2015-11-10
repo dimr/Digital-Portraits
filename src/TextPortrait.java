@@ -42,7 +42,6 @@ public class TextPortrait extends Portrait {
             result.translate(x, y);
             float fontSize = pa.map(greyscale, 0, 255, 18,12);
             float thefontSize = pa.max(fontSize, 1);
-            System.out.println(fontSize+" "+thefontSize);
             result.fill(c);
             //result.textSize(fontSize);
             result.textFont(font,thefontSize);

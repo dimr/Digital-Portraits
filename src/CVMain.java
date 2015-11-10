@@ -41,19 +41,28 @@ public class CVMain extends PApplet {
     PGraphics faceMessage;
 
     Portrait rectPortrait, vertexPortrait;
-    Portrait textPortait,AgentPortrait;
+    Portrait textPortait, AgentPortrait;
     PGraphics result;
 
     //render all portraits
-    ArrayList<PGraphics> allPortraits;
+    ArrayList<Portrait> allPortraits;
     int offset = 10;
     int accumulator = 0;
 
+
+    //will be removed
+    boolean bigScreen = true;
+    float animationFactor=0;
+
     public void setup() {
         //small screen
-        //size(1366, 768,P3D);
         //big screen
-        size(1920, 1080 - 20, P3D);
+        if (bigScreen)
+            size(1920, 1080 - 20, P3D);
+        else
+            size(1366, 768, P3D);
+
+
         video = new Capture(this, 640 / 2, 480 / 2, 15);
         opencv = new OpenCV(this, 640 / 2, 480 / 2);
         opencv.loadCascade(OpenCV.CASCADE_FRONTALFACE);
@@ -81,7 +90,6 @@ public class CVMain extends PApplet {
         opencv.loadImage(video);
         faces = opencv.detect();
         //cale(2);
-
         seesFace = faces.length == 0 ? false : true;
         showMessage();
 
@@ -92,12 +100,16 @@ public class CVMain extends PApplet {
 //        }
 
         if (allPortraits != null) {
+            animationFactor=((frameCount*2)%360);
+            //animationFactor = (int)map(sin((frameCount*2)),-1,1,0,360);
 //            image(allPortraits.get(0), 10, 10);
 //            image(allPortraits.get(1), allPortraits.get(0).width + 20, 10);
             for (int i = 1; i < allPortraits.size() + 1; i++) {
-                accumulator = offset * i + allPortraits.get(i - 1).width * (i - 1);
-                image(allPortraits.get(i - 1), accumulator, 10);
+                accumulator = offset * i + allPortraits.get(i - 1).getWidth() * (i - 1);
+                image(((VertexPortrait)allPortraits.get(i - 1)).generatePortrtait(animationFactor), accumulator, 10);
             }
+        }else {
+            animationFactor = 0;
         }
         if (snapshot != null) {
             image(face, width - face.width, 0);
@@ -111,7 +123,7 @@ public class CVMain extends PApplet {
         pushMatrix();
         //scale((float).5);
         translate(width - video.width, height - video.height);
-        if (allPortraits==null)
+        if (allPortraits == null)
             //scale((float).5);
             image(video, 0, 0);
         popMatrix();
@@ -134,11 +146,12 @@ public class CVMain extends PApplet {
         //tells whether pic is Grey==0 or Colored==1
         boolean isColored = snapshot.getColorSpace() == 0 ? false : true;
         System.out.println(!isColored ? "Grey Pic" : "Colored Pic");
-        allPortraits = new ArrayList<PGraphics>();
-        allPortraits.add(new TextPortrait(this, face, true).generatePortrtait());
-        allPortraits.add(new VertexPortrait(this, face, true).generatePortrtait());
-        //allPortraits.add(new RectPortrait(this, face, true).generatePortrtait());
-        allPortraits.add(new AgentPortrait(this,face,true).generatePortrtait());
+        allPortraits = new ArrayList<Portrait>();
+        //allPortraits.add(new RectPortrait(this, face, true));
+        allPortraits.add(new VertexPortrait(this, face, true));
+        //allPortraits.add(new TextPortrait(this, face, true));
+//        System.out.println((allPortraits.get(1).getClass().getCanonicalName()));
+        //allPortraits.add(new AgentPortrait(this,face,true).generatePortrtait());
 
 
         //        rectPortrait = new RectPortrait(this, face, true);
@@ -163,7 +176,8 @@ public class CVMain extends PApplet {
         }
         rectPortrait = null;
         result = null;
-        allPortraits=null;
+        allPortraits = null;
+        animationFactor=0;
 
     }
 
