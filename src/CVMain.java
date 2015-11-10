@@ -41,7 +41,7 @@ public class CVMain extends PApplet {
     PGraphics faceMessage;
 
     Portrait rectPortrait, vertexPortrait;
-    Portrait textPortait;
+    Portrait textPortait,AgentPortrait;
     PGraphics result;
 
     //render all portraits
@@ -51,9 +51,9 @@ public class CVMain extends PApplet {
 
     public void setup() {
         //small screen
-        size(1366, 768,P3D);
+        //size(1366, 768,P3D);
         //big screen
-        //size(1920, 1080 - 20, P3D);
+        size(1920, 1080 - 20, P3D);
         video = new Capture(this, 640 / 2, 480 / 2, 15);
         opencv = new OpenCV(this, 640 / 2, 480 / 2);
         opencv.loadCascade(OpenCV.CASCADE_FRONTALFACE);
@@ -137,7 +137,8 @@ public class CVMain extends PApplet {
         allPortraits = new ArrayList<PGraphics>();
         allPortraits.add(new TextPortrait(this, face, true).generatePortrtait());
         allPortraits.add(new VertexPortrait(this, face, true).generatePortrtait());
-        allPortraits.add(new RectPortrait(this, face, true).generatePortrtait());
+        //allPortraits.add(new RectPortrait(this, face, true).generatePortrtait());
+        allPortraits.add(new AgentPortrait(this,face,true).generatePortrtait());
 
 
         //        rectPortrait = new RectPortrait(this, face, true);
