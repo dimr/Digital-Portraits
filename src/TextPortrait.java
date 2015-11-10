@@ -28,6 +28,7 @@ public class TextPortrait extends Portrait {
         System.out.println(result.width + " " + result.height);
         result.beginDraw();
         result.background(255);
+        result.smooth();
         float x = 0, y = 10;
         int counter = 0;
         System.out.println("starting....");
@@ -39,7 +40,7 @@ public class TextPortrait extends Portrait {
             greyscale = pa.round((float) (pa.red(c) * 0.222 + pa.green(c) * 0.707 + pa.blue(c) * 0.071));
             result.pushMatrix();
             result.translate(x, y);
-            float fontSize = pa.map(greyscale, 0, 255, 20,12);
+            float fontSize = pa.map(greyscale, 0, 255, 18,12);
             float thefontSize = pa.max(fontSize, 1);
             System.out.println(fontSize+" "+thefontSize);
             result.fill(c);
