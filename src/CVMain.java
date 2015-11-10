@@ -101,7 +101,7 @@ public class CVMain extends PApplet {
 //        }
 
         if (allPortraits != null) {
-            animationFactor = ((frameCount * 2) % 360);
+            animationFactor = ((frameCount * 4) % 360);
             //animationFactor = (int)map(sin((frameCount*2)),-1,1,0,360);
 //            image(allPortraits.get(0), 10, 10);
 //            image(allPortraits.get(1), allPortraits.get(0).width + 20, 10);

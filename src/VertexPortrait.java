@@ -107,8 +107,9 @@ public class VertexPortrait extends Portrait {
         this.getResult().background(255);
         this.getResult().noFill();
         this.getResult().pushMatrix();
-        this.getResult().translate(this.getResult().width / 2, this.getResult().height / 2, -500);
+        this.getResult().translate(this.getResult().width / 2, this.getResult().height / 2, -300);
         this.getResult().rotateX(this.pa().radians(40));
+        this.getResult().rotateX(this.pa().radians(factor));
         this.getResult().rotateY(this.pa().radians(factor));
         // result.rotateZ(this.pa().radians(factor));
 

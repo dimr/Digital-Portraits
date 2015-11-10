@@ -1,8 +1,8 @@
 import gab.opencv.OpenCV;
-import processing.core.PApplet;
-import processing.core.PGraphics;
-import processing.core.PImage;
+import processing.core.*;
 import toxi.geom.Vec2D;
+
+import java.util.ArrayList;
 
 /**
  * Created by dimitris on 11/8/15.
@@ -11,10 +11,13 @@ public class RectPortrait extends Portrait {
 
 
     private PGraphics result;
+    private ArrayList<Vec2D> jitterVales;
+    private int counter=0;
     public RectPortrait(PApplet pa,PImage img,boolean useColor){
         super(pa,img,useColor);
-        System.out.println("RECT");
         this.setResult(pa.createGraphics(this.getPImage().width * 5, 5 * this.getPImage().height));
+        jitterVales = new ArrayList<Vec2D>();
+        jitterVales.add(new Vec2D().jitter((float)pa.random(0,14),(float)pa.random(10,4)));
     }
 
 
@@ -56,10 +59,11 @@ public class RectPortrait extends Portrait {
                 int c = face.pixels[y*face.width+x];
                 int greyscale = pa.round((float) (pa.red(c) * 0.222 + pa.green(c) * 0.707 + pa.blue(c) * 0.071));
                 float t = pa.map(greyscale, 0, 255, 0, 4);
-                Vec2D rectSize = new Vec2D(t,t).jitter(pa.random(4), pa.random(4));
-                this.getResult().fill(greyscale);
+                Vec2D rectSize = new Vec2D(t,t);
+                this.getResult().fill(c);
                 this.getResult().rect(pos.x(), pos.y(), rectSize.x(), rectSize.y());
             }
+            counter++;
 
         }
         //result.background(255,0,0);
