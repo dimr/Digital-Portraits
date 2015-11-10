@@ -15,7 +15,7 @@ public class TextPortrait extends Portrait {
     private PFont font;
     public TextPortrait(PApplet pa, PImage img, boolean useColor) {
         super(pa, img, useColor);
-        font = this.pa().createFont("Ubuntu",8);
+        font = this.pa().createFont("Ubuntu-Bold-48",8);
     }
 
     @Override
@@ -40,10 +40,11 @@ public class TextPortrait extends Portrait {
             result.pushMatrix();
             result.translate(x, y);
             float fontSize = pa.map(greyscale, 0, 255, 20,12);
-            fontSize = pa.max(fontSize, 1);
+            float thefontSize = pa.max(fontSize, 1);
+            System.out.println(fontSize+" "+thefontSize);
             result.fill(c);
             //result.textSize(fontSize);
-            result.textFont(font,fontSize);
+            result.textFont(font,thefontSize);
             char letter = inputText.charAt(counter);
             result.text(letter, 0, 0);
             float letterWidth = pa.textWidth(letter) + betweenLettersSpace;
