@@ -20,10 +20,11 @@ public class VertexPortrait extends Portrait {
     public VertexPortrait(PApplet pa, PImage img, boolean useColor) {
         super(pa, img, useColor);
         this.face = this.getPImage();
+        this.setResult(pa.createGraphics(this.getPImage().width * 5, 5 * this.getPImage().height, pa.P3D));
 
-        this.result = this.pa().createGraphics(this.getPImage().width * 5, 5 * this.getPImage().height, this.pa().P3D);
-        this.tileWidth = result.width / (float) this.face.width;
-        this.tileHeight = result.height / (float) this.face.height;
+        //this.setResult(this.pa().createGraphics(this.getPImage().width * 5, 5 * this.getPImage().height, this.pa().P3D));
+        this.tileWidth = this.getResult().width / (float) this.face.width;
+        this.tileHeight = this.getResult().height / (float) this.face.height;
         this.face.loadPixels();
         this.colors = new int[face.height][face.width];
         test = new ArrayList<ArrayList<Vec2D>>();
@@ -34,7 +35,10 @@ public class VertexPortrait extends Portrait {
                 colors[y][x] = face.pixels[y * face.width + x];
                 float posX = tileWidth * x;
                 float posY = tileHeight * y;
-                Vec2D pos = new Vec2D(posX, posY).sub(this.result.width/2,this.result.height/2);
+                //for animated version
+                Vec2D pos = new Vec2D(posX, posY).sub(this.getResult().width / 2, this.getResult().height / 2);
+                //for non animated version
+                Vec2D staticPos = new Vec2D(posX, posY).sub(this.getResult().width / 2, this.getResult().height / 2);
                 temp.add(pos);
             }
             test.add(temp);
@@ -43,88 +47,98 @@ public class VertexPortrait extends Portrait {
     }
 
     @Override
+    public PGraphics getResult() {
+        return this.result;
+    }
+
+    @Override
+    public void setResult(PGraphics result) {
+        this.result = result;
+    }
+
+    @Override
     public PGraphics generatePortrtait() {
         assert (this.getPImage() != null) : "OK PIMAGE";
-
-      //  System.out.println(result.width + " " + result.height);
-
-        result.beginDraw();
-        result.background(255);
-
-        result.pushMatrix();
-        result.translate(0, 0, -500);
-        result.rotateX(this.pa().radians(40));
-        for (int y = 0; y < face.height; y++) {
-
-            result.beginShape();
-            result.vertex(test.get(y).get(0).x(), test.get(y).get(0).y());
-
-            for (int x = 0; x < face.width; x++) {
-                int c = colors[y][x];
-                float greyscale = ((float) (this.pa().red(c) + this.pa().green(c) + this.pa().blue(c)));
-                result.stroke(c);
-                // result.strokeWeight(2);
-                Vec2D p = new Vec2D(test.get(y).get(x).x(), test.get(y).get(x).y());
-                // float yy=p.jitter((float).4).y();
-                result.vertex(p.x(), p.y(), this.pa().map(greyscale, 0, 255, 5, 30));
-            }
-
-            result.vertex(test.get(y).get(face.width - 1).x(), test.get(y).get(face.width - 1).y());
-
-            result.endShape();
-        }
-        result.popMatrix();
-
-
-        result.endDraw();
+//
+//      //  System.out.println(result.width + " " + result.height);
+//
+//        result.beginDraw();
+//        result.background(255);
+//
+//        result.pushMatrix();
+//        result.translate(0, 0, -500);
+//        //result.rotateX(this.pa().radians(40));
+//        for (int y = 0; y < face.height; y++) {
+//
+//            result.beginShape();
+//            result.vertex(test.get(y).get(0).x(), test.get(y).get(0).y());
+//
+//            for (int x = 0; x < face.width; x++) {
+//                int c = colors[y][x];
+//                float greyscale = ((float) (this.pa().red(c) + this.pa().green(c) + this.pa().blue(c)));
+//                result.stroke(c);
+//                // result.strokeWeight(2);
+//                this.s = new Vec2D(test.get(y).get(x).x(), test.get(y).get(x).y());
+//                // float yy=p.jitter((float).4).y();
+//                result.vertex(p.x(), p.y(), this.pa().map(greyscale, 0, 255, 5, 30));
+//            }
+//
+//            result.vertex(test.get(y).get(face.width - 1).x(), test.get(y).get(face.width - 1).y());
+//
+//            result.endShape();
+//        }
+//        result.popMatrix();
+//
+//
+//        result.endDraw();
 
 
         return result;
+
     }
 
 
     public PGraphics generatePortrtait(float factor) {
         assert (this.getPImage() != null) : "OK PIMAGE";
 
-        System.out.println(result.width + " " + result.height);
+//        System.out.println(result.width + " " + result.height);
 
-        result.beginDraw();
-        result.background(255);
-        result.noFill();
-        result.pushMatrix();
-        result.translate(result.width/2, result.height / 2, -500);
-        result.rotateX(this.pa().radians(40));
-        result.rotateY(this.pa().radians(factor));
-       // result.rotateZ(this.pa().radians(factor));
+        this.getResult().beginDraw();
+        this.getResult().background(255);
+        this.getResult().noFill();
+        this.getResult().pushMatrix();
+        this.getResult().translate(this.getResult().width / 2, this.getResult().height / 2, -500);
+        this.getResult().rotateX(this.pa().radians(40));
+        this.getResult().rotateY(this.pa().radians(factor));
+        // result.rotateZ(this.pa().radians(factor));
 
         for (int y = 0; y < face.height; y++) {
 
-            result.beginShape();
-            result.vertex(test.get(y).get(0).x(), test.get(y).get(0).y());
+            this.getResult().beginShape();
+            this.getResult().vertex(test.get(y).get(0).x(), test.get(y).get(0).y());
 
-            for (int x = 0; x < face.width; x+=2) {
+            for (int x = 0; x < face.width; x += 2) {
                 int c = colors[y][x];
                 float greyscale = ((float) (this.pa().red(c) + this.pa().green(c) + this.pa().blue(c)));
-                result.stroke(c);
+                this.getResult().stroke(c);
                 // result.strokeWeight(2);
                 Vec2D p = new Vec2D(test.get(y).get(x).x(), test.get(y).get(x).y());
                 // float yy=p.jitter((float).4).y();
-                result.vertex(p.x(), p.y(), this.pa().map(greyscale, 0, 255, 5, 30));
+                this.getResult().vertex(p.x(), p.y(), this.pa().map(greyscale, 0, 255, 5, 30));
             }
 
-            result.vertex(test.get(y).get(face.width - 1).x(), test.get(y).get(face.width - 1).y());
+            this.getResult().vertex(test.get(y).get(face.width - 1).x(), test.get(y).get(face.width - 1).y());
 
-            result.endShape();
+            this.getResult().endShape();
         }
-        result.popMatrix();
+        this.getResult().popMatrix();
 
 
-        result.endDraw();
+        this.getResult().endDraw();
 
 
-        return result;
+        return this.getResult();
     }
-
 
 
 }

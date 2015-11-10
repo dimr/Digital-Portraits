@@ -15,10 +15,12 @@ public abstract class Portrait {
     private OpenCV cv;
     private boolean useColor;
     private float ratio;
+    private PGraphics result;
 
-    public Portrait(PApplet pa, PImage img,boolean useColor) {
+
+    public Portrait(PApplet pa, PImage img, boolean useColor) {
         this.pa = pa;
-        this.img=img;
+        this.img = img;
 
         this.width = width;
         this.height = height;
@@ -43,28 +45,31 @@ public abstract class Portrait {
         this.pa = pa;
     }
 
-    public PApplet pa(){
+    public abstract PGraphics getResult();
+
+    public abstract void setResult(PGraphics result);
+
+    public PApplet pa() {
         return this.pa;
     }
 
-    public void setUseColor(boolean useColor){
-        this.useColor=useColor;
+    public void setUseColor(boolean useColor) {
+        this.useColor = useColor;
     }
 
-    public boolean getUseColor(){
+    public boolean getUseColor() {
         return this.useColor;
     }
 
 
     public void setImage(PImage img) {
-        this.cv=new OpenCV(this.pa,img,this.getUseColor());
+        this.cv = new OpenCV(this.pa, img, this.getUseColor());
         this.img = this.cv.getOutput();
     }
 
     public PImage getPImage() {
         return this.img;
     }
-
 
 
     public int getWidth() {
@@ -84,10 +89,9 @@ public abstract class Portrait {
         return this.ratio;
     }
 
-    public int getDimensions(){
-        return getWidth()*getHeight();
+    public int getDimensions() {
+        return getWidth() * getHeight();
     }
-
 
 
     @Override
@@ -97,7 +101,7 @@ public abstract class Portrait {
                 ", height=" + this.getHeight() +
                 ", useColor=" + this.useColor +
                 ", ratio=" + this.getRatio() +
-                ", dimensions=" + this.getDimensions()+
+                ", dimensions=" + this.getDimensions() +
                 '}';
     }
 

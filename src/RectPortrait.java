@@ -9,11 +9,12 @@ import toxi.geom.Vec2D;
  */
 public class RectPortrait extends Portrait {
 
-    
 
+    private PGraphics result;
     public RectPortrait(PApplet pa,PImage img,boolean useColor){
         super(pa,img,useColor);
-        System.out.println(getHeight());
+        System.out.println("RECT");
+        this.setResult(pa.createGraphics(this.getPImage().width * 5, 5 * this.getPImage().height));
     }
 
 
@@ -21,6 +22,15 @@ public class RectPortrait extends Portrait {
         super(pa,cv,useColor);
     }
 
+    @Override
+    public PGraphics getResult() {
+        return this.result;
+    }
+
+    @Override
+    public void setResult(PGraphics result) {
+        this.result=result;
+    }
 
 
     @Override
@@ -30,14 +40,14 @@ public class RectPortrait extends Portrait {
         PApplet pa=this.pa();
         face.loadPixels();
         Vec2D pos = new Vec2D();
-        PGraphics result = pa.createGraphics(this.getPImage().width*5,5*this.getPImage().height);
-        PImage image = pa.createImage(this.getPImage().width*5,5*this.getPImage().height,pa.RGB);
-        System.out.println(result.width+"---"+result.height);
-        result.beginDraw();
-        result.background(100);
-        result.noStroke();
-        float tileWidth=result.width/(float)face.width;
-        float tileHeight=result.height/(float)face.height;
+//        this.setResult(pa.createGraphics(this.getPImage().width * 5, 5 * this.getPImage().height));
+        PImage image = pa.createImage(this.getPImage().width * 5, 5 * this.getPImage().height, pa.RGB);
+        //System.out.println(this.getResult().width + "---" + this.getResult().height);
+        this.getResult().beginDraw();
+        this.getResult().background(100);
+        this.getResult().noStroke();
+        float tileWidth=this.getResult().width/(float)face.width;
+        float tileHeight=this.getResult().height/(float)face.height;
         for (int x = 0; x < face.width; x++) {
             for (int y = 0; y < face.height; y++) {
                 float posX = tileWidth * x;
@@ -47,14 +57,14 @@ public class RectPortrait extends Portrait {
                 int greyscale = pa.round((float) (pa.red(c) * 0.222 + pa.green(c) * 0.707 + pa.blue(c) * 0.071));
                 float t = pa.map(greyscale, 0, 255, 0, 4);
                 Vec2D rectSize = new Vec2D(t,t).jitter(pa.random(4), pa.random(4));
-                result.fill(greyscale);
-                result.rect(pos.x(), pos.y(), rectSize.x(), rectSize.y());
+                this.getResult().fill(greyscale);
+                this.getResult().rect(pos.x(), pos.y(), rectSize.x(), rectSize.y());
             }
 
         }
         //result.background(255,0,0);
-        result.endDraw();
+        this.getResult().endDraw();
         
-        return result;
+        return this.getResult();
     }
 }

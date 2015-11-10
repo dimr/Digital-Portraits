@@ -52,7 +52,7 @@ public class CVMain extends PApplet {
 
     //will be removed
     boolean bigScreen = true;
-    float animationFactor=0;
+    float animationFactor = 0;
 
     public void setup() {
         //small screen
@@ -100,15 +100,24 @@ public class CVMain extends PApplet {
 //        }
 
         if (allPortraits != null) {
-            animationFactor=((frameCount*2)%360);
+            animationFactor = ((frameCount * 2) % 360);
             //animationFactor = (int)map(sin((frameCount*2)),-1,1,0,360);
 //            image(allPortraits.get(0), 10, 10);
 //            image(allPortraits.get(1), allPortraits.get(0).width + 20, 10);
+            assert(allPortraits.size()!=0):"ZERO LENGTH";
+           assert(allPortraits.get(0).getResult()!=null):"EEEERRROORRR";
+
             for (int i = 1; i < allPortraits.size() + 1; i++) {
-                accumulator = offset * i + allPortraits.get(i - 1).getWidth() * (i - 1);
-                image(((VertexPortrait)allPortraits.get(i - 1)).generatePortrtait(animationFactor), accumulator, 10);
+                accumulator = offset * i + allPortraits.get(i - 1).getResult().width * (i - 1);
+                if (allPortraits.get(i-1) instanceof VertexPortrait) {
+                    int t=i-1;
+                    image(((VertexPortrait) allPortraits.get(t)).generatePortrtait(animationFactor), accumulator, 10);
+                } else {
+                    image(allPortraits.get(i - 1).generatePortrtait(), accumulator, 10);
+                    //    accumulator = offset * i + allPortraits.get(i - 1).getWidth() * (i - 1);
+                }
             }
-        }else {
+        } else {
             animationFactor = 0;
         }
         if (snapshot != null) {
@@ -147,9 +156,10 @@ public class CVMain extends PApplet {
         boolean isColored = snapshot.getColorSpace() == 0 ? false : true;
         System.out.println(!isColored ? "Grey Pic" : "Colored Pic");
         allPortraits = new ArrayList<Portrait>();
-        //allPortraits.add(new RectPortrait(this, face, true));
+        assert (new RectPortrait(this, face, true)!=null):"NULL HERE ALSO";
+        allPortraits.add(new RectPortrait(this, face, true));
         allPortraits.add(new VertexPortrait(this, face, true));
-        //allPortraits.add(new TextPortrait(this, face, true));
+        allPortraits.add(new TextPortrait(this, face, true));
 //        System.out.println((allPortraits.get(1).getClass().getCanonicalName()));
         //allPortraits.add(new AgentPortrait(this,face,true).generatePortrtait());
 
@@ -177,7 +187,7 @@ public class CVMain extends PApplet {
         rectPortrait = null;
         result = null;
         allPortraits = null;
-        animationFactor=0;
+        animationFactor = 0;
 
     }
 
