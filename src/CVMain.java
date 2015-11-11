@@ -1,5 +1,6 @@
 import controlP5.ControlP5;
 import gab.opencv.OpenCV;
+import org.gicentre.utils.move.Ease;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PImage;
@@ -44,6 +45,8 @@ public class CVMain extends PApplet {
     Portrait rectPortrait, vertexPortrait;
     Portrait textPortait, AgentPortrait;
     PGraphics result;
+    float t = 0;
+    float tInc = (float) .5;
 
     //render all portraits
     ArrayList<Portrait> allPortraits;
@@ -52,7 +55,7 @@ public class CVMain extends PApplet {
     float portraitWidth;
 
     //will be removed
-    boolean bigScreen = 1 == 1;
+    boolean bigScreen = 1 == 12;
     float animationFactor = 0;
 
 
@@ -60,8 +63,10 @@ public class CVMain extends PApplet {
     boolean theFaceIsVisible = true;
     int cou = 0;
     int faceCameIn, runningTime;
-    boolean haveTimeValue=true;
-    boolean takeSnapshot=true;
+    boolean haveTimeValue = true;
+    boolean takeSnapshot = true;
+    boolean showTimeGraphics = true;
+
     public void setup() {
         //small screen
         //big screen
@@ -87,7 +92,7 @@ public class CVMain extends PApplet {
         clearButton.addButton("clearButton").setPosition(10, 50).setSize(60, 10);
 
         //no Face Messsage
-        faceMessage = createGraphics(200, 200);
+        faceMessage = createGraphics(width, 200);
 
         portraitWidth = (width - (3 * offset)) / 3;
         // cc.s;
@@ -111,6 +116,7 @@ public class CVMain extends PApplet {
 
         if (allPortraits != null) {
             animationFactor = ((frameCount * 4) % 360);
+            float scaleLevel = 0;
             //animationFactor = (int)map(sin((frameCount*2)),-1,1,0,360);
 //            image(allPortraits.get(0), 10, 10);
 //            image(allPortraits.get(1), allPortraits.get(0).width + 20, 10);
@@ -129,8 +135,14 @@ public class CVMain extends PApplet {
 //            }
 //        } else {
 //            animationFactor = 0;
-
+            if (t < 0) {
+                tInc = abs(tInc);
+            } else if (t >= 1) {
+                tInc = -abs(tInc);
+            }
+            t += tInc;
             image(allPortraits.get(0).generatePortrtait(), offset, 10, portraitWidth, height);
+
             image(((VertexPortrait) allPortraits.get(1)).generatePortrtait(animationFactor), portraitWidth + 2 * offset, 10, portraitWidth, height);
             image(allPortraits.get(2).generatePortrtait(), portraitWidth * 2 + 3 * offset, 10, portraitWidth - 10, height);
 
@@ -142,7 +154,7 @@ public class CVMain extends PApplet {
             faceCameIn = millis();
             theFaceIsVisible = false;
             System.out.println("FACE IN");
-            haveTimeValue=true;
+            haveTimeValue = true;
 
         } else if (!seesFace) {
             theFaceIsVisible = true;
@@ -151,27 +163,40 @@ public class CVMain extends PApplet {
             result = null;
             allPortraits = null;
             animationFactor = 0;
-            runningTime=frameCount;
+            runningTime = frameCount;
             //System.out.println(runningTime);
 
         }
 
-        if (seesFace && haveTimeValue) {
+        if (seesFace && haveTimeValue && showTimeGraphics) {
             //System.out.println(faceCameIn + " " + millis());
-            float t = (millis()-faceCameIn)/1000;
-           // System.out.println(t);;
+            float t = (millis() - faceCameIn) / 1000;
+            // System.out.println(t);;
             textSize(40);
-            int countdown=(int)(3-t);
-            text("TAKING SNAPSTHOT IN "+(int)(3-t)+" seconds ",width/2-200,height/2);
-            if(t>3 && takeSnapshot){
+            int countdown = (int) (3 - t) >= 0 ? (int) (3 - t) : 0;
+            String message = "TAKING SNAPSHOT IN " + countdown + " seconds";
+            faceMessage = createGraphics(width, 200);
+            faceMessage.beginDraw();
+            faceMessage.background(0);
+            faceMessage.fill(191, 61, 39);
+            faceMessage.textSize(57);
+            faceMessage.text(message, 0, faceMessage.height / 2);
+            //faceMessage.ellipse(faceMessage.width/2,faceMessage.height/2,200, 200);
+            faceMessage.endDraw();
+            image(faceMessage, width / 2 - faceMessage.width / 2, height / 2 - faceMessage.height / 2);
+            if (t > 3 && takeSnapshot) {
                 System.out.println("PASSED");
-               initPortraits();
-                takeSnapshot=false;
+                //initPortraits();
+                snapShotButton();
+                takeSnapshot = false;
+                showTimeGraphics = false;
             }
-          //  haveTimeValue=false;
-        }else if(!seesFace ){
-            haveTimeValue=false;
-            takeSnapshot=true;
+            //  haveTimeValue=false;
+        } else if (!seesFace) {
+            haveTimeValue = false;
+            takeSnapshot = true;
+            showTimeGraphics = true;
+            clearButton();
         }
         if (snapshot != null) {
             image(face, width - face.width, 0);
@@ -188,8 +213,7 @@ public class CVMain extends PApplet {
     }
 
 
-
-    void initPortraits(){
+    void initPortraits() {
         snapshot = new OpenCV(this, opencv.getSnapshot(), true);
         face = snapshot.getOutput().get(faces[0].x, faces[0].y - 50, faces[0].width, faces[0].height + 70);
 
@@ -238,8 +262,7 @@ public class CVMain extends PApplet {
 //
 //        result = vertexPortrait.generatePortrtait();
         System.out.println("GENERATED");
-        final long pressTime = System.currentTimeMillis();
-        System.out.println("After" + " " + (pressTime - faceEnters) / 1000.0);
+
     }
 
     public void clearButton() {
@@ -257,11 +280,11 @@ public class CVMain extends PApplet {
     public void showMessage() {
         if (!seesFace) {
             faceMessage.beginDraw();
-            faceMessage.background(120, 0, 0);
-            faceMessage.textSize(17);
-            faceMessage.text("NO FACE", faceMessage.width / 2, faceMessage.height / 2);
+            faceMessage.background(0);//(120, 0, 0);
+            faceMessage.textSize(57);
+            faceMessage.text("NO FACE", 0, faceMessage.height / 2);
             faceMessage.endDraw();
-            image(faceMessage, 0, height / 2);
+            image(faceMessage, width / 2 - faceMessage.width / 2, height / 2 - faceMessage.height / 2);
         }
     }
 
