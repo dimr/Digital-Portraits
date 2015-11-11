@@ -7,6 +7,7 @@ import processing.video.Capture;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * Created by dimitris on 11/7/15.
@@ -51,9 +52,16 @@ public class CVMain extends PApplet {
     float portraitWidth;
 
     //will be removed
-    boolean bigScreen =1==1;
+    boolean bigScreen = 1 == 1;
     float animationFactor = 0;
 
+
+    long faceEnters;
+    boolean theFaceIsVisible = true;
+    int cou = 0;
+    int faceCameIn, runningTime;
+    boolean haveTimeValue=true;
+    boolean takeSnapshot=true;
     public void setup() {
         //small screen
         //big screen
@@ -81,7 +89,8 @@ public class CVMain extends PApplet {
         //no Face Messsage
         faceMessage = createGraphics(200, 200);
 
-        portraitWidth=(width-(3*offset))/3;
+        portraitWidth = (width - (3 * offset)) / 3;
+        // cc.s;
 
     }
 
@@ -122,17 +131,52 @@ public class CVMain extends PApplet {
 //            animationFactor = 0;
 
             image(allPortraits.get(0).generatePortrtait(), offset, 10, portraitWidth, height);
-            image(((VertexPortrait) allPortraits.get(1)).generatePortrtait(animationFactor), portraitWidth+2*offset, 10, portraitWidth, height);
-            image(allPortraits.get(2).generatePortrtait(),portraitWidth*2+3*offset,10,portraitWidth-10,height);
+            image(((VertexPortrait) allPortraits.get(1)).generatePortrtait(animationFactor), portraitWidth + 2 * offset, 10, portraitWidth, height);
+            image(allPortraits.get(2).generatePortrtait(), portraitWidth * 2 + 3 * offset, 10, portraitWidth - 10, height);
+
+
+        }
+
+        if (seesFace && theFaceIsVisible) {
+//            System.out.println(cou+++" IF CLAUSE"+" "+theFaceIsVisible+" "+seesFace);
+            faceCameIn = millis();
+            theFaceIsVisible = false;
+            System.out.println("FACE IN");
+            haveTimeValue=true;
+
+        } else if (!seesFace) {
+            theFaceIsVisible = true;
+            // System.out.println(cou+" ELSE IF "+" "+theFaceIsVisible+" "+seesFace);
+            rectPortrait = null;
+            result = null;
+            allPortraits = null;
+            animationFactor = 0;
+            runningTime=frameCount;
+            //System.out.println(runningTime);
+
+        }
+
+        if (seesFace && haveTimeValue) {
+            //System.out.println(faceCameIn + " " + millis());
+            float t = (millis()-faceCameIn)/1000;
+           // System.out.println(t);;
+            textSize(40);
+            int countdown=(int)(3-t);
+            text("TAKING SNAPSTHOT IN "+(int)(3-t)+" seconds ",width/2-200,height/2);
+            if(t>3 && takeSnapshot){
+                System.out.println("PASSED");
+               initPortraits();
+                takeSnapshot=false;
+            }
+          //  haveTimeValue=false;
+        }else if(!seesFace ){
+            haveTimeValue=false;
+            takeSnapshot=true;
         }
         if (snapshot != null) {
             image(face, width - face.width, 0);
         }
-//        if (result != null) {
-//            image(result, face.width, 0);
-//        }
 
-        //this is the camera
 
         pushMatrix();
         //scale((float).5);
@@ -143,6 +187,19 @@ public class CVMain extends PApplet {
         popMatrix();
     }
 
+
+
+    void initPortraits(){
+        snapshot = new OpenCV(this, opencv.getSnapshot(), true);
+        face = snapshot.getOutput().get(faces[0].x, faces[0].y - 50, faces[0].width, faces[0].height + 70);
+
+        boolean isColored = snapshot.getColorSpace() == 0 ? false : true;
+        System.out.println(!isColored ? "Grey Pic" : "Colored Pic");
+        allPortraits = new ArrayList<Portrait>();
+        allPortraits.add(new RectPortrait(this, face, true));
+        allPortraits.add(new VertexPortrait(this, face, true));
+        allPortraits.add(new TextPortrait(this, face, true));
+    }
 
     public void snapShotButton() {
         if (!seesFace) {
@@ -181,6 +238,8 @@ public class CVMain extends PApplet {
 //
 //        result = vertexPortrait.generatePortrtait();
         System.out.println("GENERATED");
+        final long pressTime = System.currentTimeMillis();
+        System.out.println("After" + " " + (pressTime - faceEnters) / 1000.0);
     }
 
     public void clearButton() {
