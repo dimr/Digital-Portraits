@@ -55,7 +55,7 @@ public class CVMain extends PApplet {
     float portraitWidth;
 
     //will be removed
-    boolean bigScreen = 1 == 12;
+    boolean bigScreen = 1 == 1;
     float animationFactor = 0;
 
 
@@ -197,9 +197,10 @@ public class CVMain extends PApplet {
             takeSnapshot = true;
             showTimeGraphics = true;
             clearButton();
+            snapshot=null;
         }
         if (snapshot != null) {
-            image(face, width - face.width, 0);
+            image(face, width - face.width-10, 10);
         }
 
 
