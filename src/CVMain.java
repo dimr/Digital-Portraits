@@ -200,7 +200,7 @@ public class CVMain extends PApplet {
             snapshot=null;
         }
         if (snapshot != null) {
-            image(face, width - face.width-10, 10);
+            image(face, width - face.width - 10, (int) (10 + 10 / ((float) height - face.height)));
         }
 
 
