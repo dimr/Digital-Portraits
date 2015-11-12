@@ -4,7 +4,9 @@ import org.gicentre.utils.move.Ease;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PImage;
+import processing.core.PVector;
 import processing.video.Capture;
+import toxi.geom.Vec2D;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -28,6 +30,7 @@ public class CVMain extends PApplet {
 
     //Main Pimage that gets passed tou Portraits instances
     OpenCV snapshot;
+    PVector finalSnapshotPosition = new PVector();
 
     //Take Snapshot Button and clean(will be replaced)
     ControlP5 snapShotButton, clearButton;
@@ -71,7 +74,7 @@ public class CVMain extends PApplet {
         //small screen
         //big screen
         if (bigScreen)
-            size(1920, 1080 - 20, P3D);
+            size(1920, 1080 + 20, P3D);
         else
             size(1366, 768, P3D);
 
@@ -87,9 +90,9 @@ public class CVMain extends PApplet {
 
         //Snapshot Button
         snapShotButton = new ControlP5(this);
-        snapShotButton.addButton("snapShotButton").setPosition(10, 30).setSize(60, 10);
+        snapShotButton.addButton("snapShotButton").setPosition(10, 30).setSize(60, 10).setVisible(false);
         clearButton = new ControlP5(this);
-        clearButton.addButton("clearButton").setPosition(10, 50).setSize(60, 10);
+        clearButton.addButton("clearButton").setPosition(10, 50).setSize(60, 10).setVisible(false);
 
         //no Face Messsage
         faceMessage = createGraphics(width, 200);
@@ -197,11 +200,17 @@ public class CVMain extends PApplet {
             takeSnapshot = true;
             showTimeGraphics = true;
             clearButton();
-            snapshot=null;
+            snapshot = null;
         }
+        /*
         if (snapshot != null) {
-            image(face, width - face.width - 10, (int) (10 + 10 / ((float) height - face.height)));
-        }
+            //with linear interpolation
+            finalSnapshotPosition.lerp(new PVector(width - face.width - 10, (int) (10 + 10 / ((float) height - face.height))), Ease.cubicBoth((float) .4));
+            image(face, finalSnapshotPosition.x, finalSnapshotPosition.y);
+
+            //original - no lerping
+//            image(face, width - face.width - 10, (int) (10 + 10 / ((float) height - face.height)));
+        }*/
 
 
         pushMatrix();
@@ -217,7 +226,7 @@ public class CVMain extends PApplet {
     void initPortraits() {
         snapshot = new OpenCV(this, opencv.getSnapshot(), true);
         face = snapshot.getOutput().get(faces[0].x, faces[0].y - 50, faces[0].width, faces[0].height + 70);
-
+        //finalSnapshotPosition.set(faces[0].x,faces[0].y);
         boolean isColored = snapshot.getColorSpace() == 0 ? false : true;
         System.out.println(!isColored ? "Grey Pic" : "Colored Pic");
         allPortraits = new ArrayList<Portrait>();
@@ -236,6 +245,8 @@ public class CVMain extends PApplet {
         // snapshot.useColor();
         // snapshot.brightness(-100);
         face = snapshot.getOutput().get(faces[0].x, faces[0].y - 50, faces[0].width, faces[0].height + 70);
+        //  width - video.width, height - video.height
+        finalSnapshotPosition.set(faces[0].x + width - video.width, faces[0].y + height - video.height);
 //        System.out.println("CLICK");
 //        System.out.println(face.width+" "+face.height+" ratio:"+ (float)face.width/face.height);
 
@@ -275,6 +286,7 @@ public class CVMain extends PApplet {
         result = null;
         allPortraits = null;
         animationFactor = 0;
+        finalSnapshotPosition.set(0, 0);
 
     }
 
