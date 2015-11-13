@@ -1,16 +1,11 @@
 import controlP5.ControlP5;
 import gab.opencv.OpenCV;
 import org.gicentre.utils.move.Ease;
-import processing.core.PApplet;
-import processing.core.PGraphics;
-import processing.core.PImage;
-import processing.core.PVector;
+import processing.core.*;
 import processing.video.Capture;
-import toxi.geom.Vec2D;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 /**
  * Created by dimitris on 11/7/15.
@@ -47,6 +42,8 @@ public class CVMain extends PApplet {
 
     Portrait rectPortrait, vertexPortrait;
     Portrait textPortait, AgentPortrait;
+    PVector rectFinalPosition,vertexFinalPosition,textFinalPosition;
+
     PGraphics result;
     float t = 0;
     float tInc = (float) .5;
@@ -99,7 +96,9 @@ public class CVMain extends PApplet {
 
         portraitWidth = (width - (3 * offset)) / 3;
         // cc.s;
-
+        rectFinalPosition =new PVector();
+        vertexFinalPosition=new PVector();
+        textFinalPosition=new PVector();
     }
 
 
@@ -144,10 +143,22 @@ public class CVMain extends PApplet {
                 tInc = -abs(tInc);
             }
             t += tInc;
-            image(allPortraits.get(0).generatePortrtait(), offset, 10, portraitWidth, height);
 
-            image(((VertexPortrait) allPortraits.get(1)).generatePortrtait(animationFactor), portraitWidth + 2 * offset, 10, portraitWidth, height);
-            image(allPortraits.get(2).generatePortrtait(), portraitWidth * 2 + 3 * offset, 10, portraitWidth - 10, height);
+            rectFinalPosition.lerp(new PVector(portraitWidth, height), Ease.cubicBoth((float) .4));
+
+
+
+
+            image(allPortraits.get(0).generatePortrtait(), offset, 10, rectFinalPosition.x, rectFinalPosition.y);
+            if (rectFinalPosition.x>portraitWidth-10) {
+                vertexFinalPosition.lerp(new PVector(portraitWidth, height),Ease.cubicBoth((float) .4));
+                image(((VertexPortrait) allPortraits.get(1)).generatePortrtait(animationFactor), portraitWidth + 2 * offset, 10, portraitWidth, vertexFinalPosition.y);
+            }
+            if (vertexFinalPosition.y>height-10){
+                textFinalPosition.lerp(new PVector(portraitWidth-10,height),(float).4);
+
+            image(allPortraits.get(2).generatePortrtait(), portraitWidth * 2 + 3 * offset, 10, textFinalPosition.x, height);
+            }
 
 
         }
@@ -182,7 +193,7 @@ public class CVMain extends PApplet {
             faceMessage.beginDraw();
             faceMessage.background(0);
             faceMessage.fill(191, 61, 39);
-            faceMessage.textSize(57);
+            faceMessage.textSize(80);
             faceMessage.text(message, 0, faceMessage.height / 2);
             //faceMessage.ellipse(faceMessage.width/2,faceMessage.height/2,200, 200);
             faceMessage.endDraw();
@@ -201,8 +212,11 @@ public class CVMain extends PApplet {
             showTimeGraphics = true;
             clearButton();
             snapshot = null;
+            rectFinalPosition.set(0,0);
+            vertexFinalPosition.set(0,0);
+            textFinalPosition.set(0,0);
         }
-        /*
+
         if (snapshot != null) {
             //with linear interpolation
             finalSnapshotPosition.lerp(new PVector(width - face.width - 10, (int) (10 + 10 / ((float) height - face.height))), Ease.cubicBoth((float) .4));
@@ -210,7 +224,7 @@ public class CVMain extends PApplet {
 
             //original - no lerping
 //            image(face, width - face.width - 10, (int) (10 + 10 / ((float) height - face.height)));
-        }*/
+        }
 
 
         pushMatrix();

@@ -24,6 +24,16 @@ public class AgentPortrait extends Portrait {
     }
 
     @Override
+    public PGraphics getResult() {
+        return null;
+    }
+
+    @Override
+    public void setResult(PGraphics result) {
+
+    }
+
+    @Override
     public PGraphics generatePortrtait() {
         Vec2D pos = new Vec2D();
         result.beginDraw();
