@@ -71,7 +71,7 @@ public class CVMain extends PApplet {
         //small screen
         //big screen
         if (bigScreen)
-            size(1920, 1080 + 20, P3D);
+            size(1920, 1080 - 50, P3D);
         else
             size(1366, 768, P3D);
 
@@ -213,15 +213,19 @@ public class CVMain extends PApplet {
             clearButton();
             snapshot = null;
             rectFinalPosition.set(0,0);
-            vertexFinalPosition.set(0,0);
+            vertexFinalPosition.set(0, 0);
             textFinalPosition.set(0,0);
         }
 
         if (snapshot != null) {
-            //with linear interpolation
-            finalSnapshotPosition.lerp(new PVector(width - face.width - 10, (int) (10 + 10 / ((float) height - face.height))), Ease.cubicBoth((float) .4));
-            image(face, finalSnapshotPosition.x, finalSnapshotPosition.y);
+            //with linear interpolation to the top right corner
+            //finalSnapshotPosition.lerp(new PVector(width - face.width - 10, (int) (10 + 10 / ((float) height - face.height))), Ease.cubicBoth((float) .4));
+            //image(face, finalSnapshotPosition.x, finalSnapshotPosition.y);
 
+
+            finalSnapshotPosition.lerp(new PVector(width - face.width - 10,height-face.height),Ease.cubicBoth((float) .4));
+            finalSnapshotPosition.lerp(new PVector(width - face.width - 10, (int) (10 +  ((float) height - face.height))), Ease.cubicBoth((float) .4));
+            image(face, finalSnapshotPosition.x, finalSnapshotPosition.y);
             //original - no lerping
 //            image(face, width - face.width - 10, (int) (10 + 10 / ((float) height - face.height)));
         }
