@@ -42,7 +42,7 @@ public class CVMain extends PApplet {
 
     Portrait rectPortrait, vertexPortrait;
     Portrait textPortait, AgentPortrait;
-    PVector rectFinalPosition,vertexFinalPosition,textFinalPosition;
+    PVector rectFinalPosition, vertexFinalPosition, textFinalPosition;
 
     PGraphics result;
     float t = 0;
@@ -96,9 +96,9 @@ public class CVMain extends PApplet {
 
         portraitWidth = (width - (3 * offset)) / 3;
         // cc.s;
-        rectFinalPosition =new PVector();
-        vertexFinalPosition=new PVector();
-        textFinalPosition=new PVector();
+        rectFinalPosition = new PVector();
+        vertexFinalPosition = new PVector();
+        textFinalPosition = new PVector();
     }
 
 
@@ -111,60 +111,31 @@ public class CVMain extends PApplet {
         showMessage();
 
 
-//        for (int i = 1; i < allPortraits.size(); i++) {
-//            int offstet=10;
-//            image(allPortraits.get(i),offstet*i+allPortraits.get(i-1).width+,10);
-//        }
-
         if (allPortraits != null) {
             animationFactor = ((frameCount * 4) % 360);
-            float scaleLevel = 0;
-            //animationFactor = (int)map(sin((frameCount*2)),-1,1,0,360);
-//            image(allPortraits.get(0), 10, 10);
-//            image(allPortraits.get(1), allPortraits.get(0).width + 20, 10);
+
             assert (allPortraits.size() != 0) : "ZERO LENGTH";
             assert (allPortraits.get(0).getResult() != null) : "EEEERRROORRR";
-
-//            for (int i = 1; i < allPortraits.size() + 1; i++) {
-//                accumulator = offset * i + allPortraits.get(i - 1).getResult().width * (i - 1);
-//                if (allPortraits.get(i-1) instanceof VertexPortrait) {
-//                    int t=i-1;
-//                    image(((VertexPortrait) allPortraits.get(t)).generatePortrtait(animationFactor), accumulator, 10);
-//                } else {
-//                    image(allPortraits.get(i - 1).generatePortrtait(), accumulator, 10);
-//                    //    accumulator = offset * i + allPortraits.get(i - 1).getWidth() * (i - 1);
-//                }
-//            }
-//        } else {
-//            animationFactor = 0;
-            if (t < 0) {
-                tInc = abs(tInc);
-            } else if (t >= 1) {
-                tInc = -abs(tInc);
-            }
-            t += tInc;
+            
 
             rectFinalPosition.lerp(new PVector(portraitWidth, height), Ease.cubicBoth((float) .4));
 
 
-
-
             image(allPortraits.get(0).generatePortrtait(), offset, 10, rectFinalPosition.x, rectFinalPosition.y);
-            if (rectFinalPosition.x>portraitWidth-10) {
-                vertexFinalPosition.lerp(new PVector(portraitWidth, height),Ease.cubicBoth((float) .4));
+            if (rectFinalPosition.x > portraitWidth - 10) {
+                vertexFinalPosition.lerp(new PVector(portraitWidth, height), Ease.cubicBoth((float) .4));
                 image(((VertexPortrait) allPortraits.get(1)).generatePortrtait(animationFactor), portraitWidth + 2 * offset, 10, portraitWidth, vertexFinalPosition.y);
             }
-            if (vertexFinalPosition.y>height-10){
-                textFinalPosition.lerp(new PVector(portraitWidth-10,height),(float).4);
+            if (vertexFinalPosition.y > height - 10) {
+                textFinalPosition.lerp(new PVector(portraitWidth - 10, height), (float) .4);
 
-            image(allPortraits.get(2).generatePortrtait(), portraitWidth * 2 + 3 * offset, 10, textFinalPosition.x, height);
+                image(allPortraits.get(2).generatePortrtait(), portraitWidth * 2 + 3 * offset, 10, textFinalPosition.x, height);
             }
 
 
         }
 
         if (seesFace && theFaceIsVisible) {
-//            System.out.println(cou+++" IF CLAUSE"+" "+theFaceIsVisible+" "+seesFace);
             faceCameIn = millis();
             theFaceIsVisible = false;
             System.out.println("FACE IN");
@@ -172,18 +143,13 @@ public class CVMain extends PApplet {
 
         } else if (!seesFace) {
             theFaceIsVisible = true;
-            // System.out.println(cou+" ELSE IF "+" "+theFaceIsVisible+" "+seesFace);
             rectPortrait = null;
             result = null;
             allPortraits = null;
             animationFactor = 0;
             runningTime = frameCount;
-            //System.out.println(runningTime);
-
         }
-
         if (seesFace && haveTimeValue && showTimeGraphics) {
-            //System.out.println(faceCameIn + " " + millis());
             float t = (millis() - faceCameIn) / 1000;
             // System.out.println(t);;
             textSize(40);
@@ -195,7 +161,6 @@ public class CVMain extends PApplet {
             faceMessage.fill(191, 61, 39);
             faceMessage.textSize(80);
             faceMessage.text(message, 0, faceMessage.height / 2);
-            //faceMessage.ellipse(faceMessage.width/2,faceMessage.height/2,200, 200);
             faceMessage.endDraw();
             image(faceMessage, width / 2 - faceMessage.width / 2, height / 2 - faceMessage.height / 2);
             if (t > 3 && takeSnapshot) {
@@ -212,27 +177,20 @@ public class CVMain extends PApplet {
             showTimeGraphics = true;
             clearButton();
             snapshot = null;
-            rectFinalPosition.set(0,0);
+            rectFinalPosition.set(0, 0);
             vertexFinalPosition.set(0, 0);
-            textFinalPosition.set(0,0);
+            textFinalPosition.set(0, 0);
         }
 
         if (snapshot != null) {
-            //with linear interpolation to the top right corner
-            //finalSnapshotPosition.lerp(new PVector(width - face.width - 10, (int) (10 + 10 / ((float) height - face.height))), Ease.cubicBoth((float) .4));
-            //image(face, finalSnapshotPosition.x, finalSnapshotPosition.y);
-
-
-            finalSnapshotPosition.lerp(new PVector(width - face.width - 10,height-face.height),Ease.cubicBoth((float) .4));
-            finalSnapshotPosition.lerp(new PVector(width - face.width - 10, (int) (10 +  ((float) height - face.height))), Ease.cubicBoth((float) .4));
+            finalSnapshotPosition.lerp(new PVector(width - face.width - 10, height - face.height), Ease.cubicBoth((float) .4));
+            finalSnapshotPosition.lerp(new PVector(width - face.width - 10, (int) (10 + ((float) height - face.height))), Ease.cubicBoth((float) .4));
             image(face, finalSnapshotPosition.x, finalSnapshotPosition.y);
-            //original - no lerping
-//            image(face, width - face.width - 10, (int) (10 + 10 / ((float) height - face.height)));
+
         }
 
 
         pushMatrix();
-        //scale((float).5);
         translate(width - video.width, height - video.height);
         if (allPortraits == null)
             //scale((float).5);
@@ -244,7 +202,6 @@ public class CVMain extends PApplet {
     void initPortraits() {
         snapshot = new OpenCV(this, opencv.getSnapshot(), true);
         face = snapshot.getOutput().get(faces[0].x, faces[0].y - 50, faces[0].width, faces[0].height + 70);
-        //finalSnapshotPosition.set(faces[0].x,faces[0].y);
         boolean isColored = snapshot.getColorSpace() == 0 ? false : true;
         System.out.println(!isColored ? "Grey Pic" : "Colored Pic");
         allPortraits = new ArrayList<Portrait>();
@@ -260,13 +217,10 @@ public class CVMain extends PApplet {
         }
 
         snapshot = new OpenCV(this, opencv.getSnapshot(), true);
-        // snapshot.useColor();
-        // snapshot.brightness(-100);
         face = snapshot.getOutput().get(faces[0].x, faces[0].y - 50, faces[0].width, faces[0].height + 70);
         //  width - video.width, height - video.height
         finalSnapshotPosition.set(faces[0].x + width - video.width, faces[0].y + height - video.height);
-//        System.out.println("CLICK");
-//        System.out.println(face.width+" "+face.height+" ratio:"+ (float)face.width/face.height);
+
 
         //tells whether pic is Grey==0 or Colored==1
         boolean isColored = snapshot.getColorSpace() == 0 ? false : true;
@@ -275,22 +229,7 @@ public class CVMain extends PApplet {
         allPortraits.add(new RectPortrait(this, face, true));
         allPortraits.add(new VertexPortrait(this, face, true));
         allPortraits.add(new TextPortrait(this, face, true));
-//        System.out.println((allPortraits.get(1).getClass().getCanonicalName()));
-        //allPortraits.add(new AgentPortrait(this,face,true).generatePortrtait());
 
-
-        //        rectPortrait = new RectPortrait(this, face, true);
-//        PGraphics sult = rectPortrait.generatePortrtait();
-//        System.out.println(rectPortrait.toString());
-//
-//
-//        textPortait = new TextPortrait(this, face, true);
-//        System.out.println(textPortait.toString());
-//        result = textPortait.generatePortrtait();
-//
-//        vertexPortrait = new VertexPortrait(this, face, true);
-//
-//        result = vertexPortrait.generatePortrtait();
         System.out.println("GENERATED");
 
     }
