@@ -57,10 +57,10 @@ public class CVMain extends PApplet {
     public void setup() {
         //small screen
         //big screen
-        if (bigScreen)
-            size(1920, 1080 - 20, P3D);
-        else
-            size(1366, 768, P3D);
+        //if (bigScreen)
+         //   size(1920, 1080 - 20, P3D);
+        //else
+            size(displayWidth,displayHeight, P3D);
 
 
         video = new Capture(this, 640 / 2, 480 / 2, 15);
